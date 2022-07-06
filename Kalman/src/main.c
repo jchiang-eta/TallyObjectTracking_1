@@ -15,6 +15,7 @@
 #include "quant_unittest.h"
 
 void unittest() {
+
     matrix_unittest();
     hungarian_unittest();
     counting_unittest();
