@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# TallyObjectTracking_1
-=======
 # C-Implementation of Object Tracking for Tally
 
 ## Description
