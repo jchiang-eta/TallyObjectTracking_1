@@ -102,6 +102,7 @@ void filtering_unittest()
 	debug("\tFiltering unittest\r\n");
 
 	init_boxes();
+	int a = 10
 
 	int n_kept_tmp = FilterByScoreSingleClassExclBG_Float(test_scores, N_TEST_BOXES, TEST_SCORE_THRESHOLD, kept_indicies_tmp, MAX_INDICIES);
 
@@ -109,7 +110,7 @@ void filtering_unittest()
 	assert(n_kept_tmp == N_TEST_OVER_THRESHOLD);
 	//// check if each box is ok
 	for (int i = 0, idx = 0; i < N_TEST_OVER_THRESHOLD; i++, idx += N_TEST_BOXES / N_TEST_OVER_THRESHOLD)
-		assert(kept_indicies_tmp[i] != idx);
+		assert(kept_indicies_tmp[i] == idx);
 }
 
 void filtering_unittest_1()
