@@ -102,7 +102,6 @@ void filtering_unittest()
 	debug("\tFiltering unittest\r\n");
 
 	init_boxes();
-	int a = 10
 
 	int n_kept_tmp = FilterByScoreSingleClassExclBG_Float(test_scores, N_TEST_BOXES, TEST_SCORE_THRESHOLD, kept_indicies_tmp, MAX_INDICIES);
 
