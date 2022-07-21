@@ -4,6 +4,7 @@
 #include "pipeline_config.h"
 #include "pipeline.h"
 #include "debug.h"
+#include "assertion.h"
 
 #ifdef TESTING
 #include "matrix_unittest.h"
@@ -13,6 +14,11 @@
 #include "hungarian_unittest.h"
 #include "counting_unittest.h"
 #include "quant_unittest.h"
+
+int simple_test()
+{
+    return 1;
+}
 
 void unittest() {
     matrix_unittest();
