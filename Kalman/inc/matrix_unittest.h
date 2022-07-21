@@ -5,6 +5,6 @@
 * \brief Unit tests for matrix operations
 */
 void matrix_unittest();
-int simple_test();
+// int simple_test();
 
 #endif

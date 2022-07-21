@@ -9,6 +9,7 @@
 
 // add headers that you want to pre-compile here
 extern "C" {
-#include "../Kalman/inc/matrix_unittest.h"
+#include "../Kalman/main.h"
+
 }
 #endif //PCH_H
