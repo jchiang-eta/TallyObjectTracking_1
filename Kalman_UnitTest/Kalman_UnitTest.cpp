@@ -12,7 +12,7 @@ namespace KalmanUnitTest
 		TEST_METHOD(TestMethod1)
 		{
 			int a = simple_test();
-			Assert::AreEqual(a, 1);
+			Assert::AreEqual(a, 2);
 		}
 	};
 }
