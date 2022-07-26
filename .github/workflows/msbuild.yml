@@ -33,14 +33,8 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild Kalman.sln /p:Configuration=${{env.BUILD_CONFIGURATION}} & vstest.console.exe Release\Kalman_UnitTest.dll
-
-    # - name: Build Kalman UnitTests
-    #   working-directory: ${{env.GITHUB_WORKSPACE}}
-    #   # Add additional options to the MSBuild command line here (like platform or verbosity level).
-    #   # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-    #   run: msbuild Kalman_UnitTest/Kalman_UnitTest.vcxproj /p:Configuration=${{env.BUILD_CONFIGURATION}}
+      run: msbuild Kalman.sln /p:Configuration=${{env.BUILD_CONFIGURATION}}
     
-    # - name: Run Unit Tests
-    #   working-directory: ${{env.GITHUB_WORKSPACE}}
-    #   run: vstest.console.exe Release\UnitTests.dll
+    - name: Run Unit Tests
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: vstest.console.exe Release\Kalman_UnitTest.dll
