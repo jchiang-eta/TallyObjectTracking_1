@@ -4,7 +4,9 @@
 /*!
 * \brief Unit tests for matrix operations
 */
+#include "matrix.h"
+
 void matrix_unittest();
-// int simple_test();
+matrix_data_t test_matrix_inverse();
 
 #endif

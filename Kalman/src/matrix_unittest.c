@@ -10,7 +10,7 @@
 /**
 * \brief Tests matrix inversion using Cholesky decomposition
 */
-void test_matrix_inverse()
+matrix_data_t test_matrix_inverse()
 {
     int result;
 
@@ -39,7 +39,8 @@ void test_matrix_inverse()
 
     // test the result
     matrix_data_t test = matrix_get(&mi, 1, 1);
-    assert(test >= 1.3);
+    return test;
+    //assert(test >= 1.3);
 }
 
 /*!

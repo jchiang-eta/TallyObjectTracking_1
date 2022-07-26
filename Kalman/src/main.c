@@ -15,11 +15,6 @@
 #include "counting_unittest.h"
 #include "quant_unittest.h"
 
-int simple_test()
-{
-    return 1;
-}
-
 void unittest() {
     matrix_unittest();
     hungarian_unittest();

@@ -101,7 +101,6 @@
     <ClInclude Include="inc\tracking.h" />
     <ClInclude Include="inc\tracking_unittest.h" />
     <ClInclude Include="inc\vec_types.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="project_defines_standalone.h" />
   </ItemGroup>
   <ItemGroup>
