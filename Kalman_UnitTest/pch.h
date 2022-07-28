@@ -11,7 +11,7 @@
 extern "C" {
 //#include "../Kalman/inc/assertion.h"
 //#include "../Kalman/inc/bbox_types.h"
-//#include "../Kalman/inc/cholesky.h"
+#include "../Kalman/inc/cholesky.h"
 //#include "../Kalman/inc/compiler.h"
 //#include "../Kalman/inc/counting.h"
 //#include "../Kalman/inc/counting_unittest.h"
@@ -23,7 +23,7 @@ extern "C" {
 //#include "../Kalman/inc/kalman_filters_factory.h"
 //#include "../Kalman/inc/kalman_measurements_factory.h"
 #include "../Kalman/inc/matrix.h"
-#include "../Kalman/inc/matrix_unittest.h"
+//#include "../Kalman/inc/matrix_unittest.h"
 //#include "../Kalman/inc/nms_byte.h"
 //#include "../Kalman/inc/nms_float.h"
 //#include "../Kalman/inc/pipeline.h"
