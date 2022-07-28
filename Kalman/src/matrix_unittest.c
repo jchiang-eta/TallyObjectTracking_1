@@ -10,7 +10,7 @@
 /**
 * \brief Tests matrix inversion using Cholesky decomposition
 */
-matrix_data_t test_matrix_inverse()
+void test_matrix_inverse()
 {
     int result;
 
