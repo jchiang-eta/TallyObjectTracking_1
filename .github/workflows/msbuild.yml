@@ -1,7 +1,10 @@
 name: MSBuild
 
 on:
-  [push, pull_request]:
+  push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 env:
