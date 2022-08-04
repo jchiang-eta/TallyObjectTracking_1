@@ -8,11 +8,11 @@
 
 void tracking_unittest();
 
-void test_match_filter();
+int test_match_filter();
 void test_tracking_1();
-void test_tracking_2();
-void test_tracking_clearing();
-void bboxcorner2centroid_unittest();
+int test_tracking_2();
+int test_tracking_clearing();
+int bboxcorner2centroid_unittest();
 
 #endif // !_TRACKING_UNITTESTING_H
 

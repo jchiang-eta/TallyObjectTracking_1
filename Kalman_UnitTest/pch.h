@@ -32,9 +32,9 @@ extern "C" {
 //#include "../Kalman/inc/pipeline_unittest.h"
 #include "../Kalman/inc/postprocessing_unittest.h"
 //#include "../Kalman/inc/project_defines_standalone.h"
-//#include "../Kalman/inc/quant_unittest.h"
-//#include "../Kalman/inc/quant_utils.h"
-//#include "../Kalman/inc/tracking.h"
-//#include "../Kalman/inc/tracking_unittest.h"
+#include "../Kalman/inc/quant_unittest.h"
+#include "../Kalman/inc/quant_utils.h"
+#include "../Kalman/inc/tracking.h"
+#include "../Kalman/inc/tracking_unittest.h"
 }
 #endif //PCH_H

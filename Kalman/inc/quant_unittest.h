@@ -4,6 +4,7 @@
 void quant_unittest();
 
 // partial tests
+int dequantize_class_unittest();
 void dequantize_unittest();
 void quantize_unittest();
-void dequantize_by_index_unittest();
+int dequantize_by_index_unittest();

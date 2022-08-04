@@ -65,7 +65,7 @@ static kalman_cfg_t kalman_config = {0};
 //}
 
 // test filtering capability
-void test_match_filter() {
+int test_match_filter() {
 
 	debug("test_match_filter\r\n");
 
@@ -79,10 +79,15 @@ void test_match_filter() {
 			debug("\tcosts[%d]=%d\r\n", i, costs_0[i]);
 		}
 
+#ifdef UNITTEST_ASSERTION
+		if (n != 3 || costs_0[0] != 17 || costs_0[1] != 20 || costs_0[2] != 30)
+			return 0;
+#else
 		assert(n == 3);
 		assert(costs_0[0] == 17);
 		assert(costs_0[1] == 20);
 		assert(costs_0[2] == 30);
+#endif
 
 	}
 
@@ -96,13 +101,18 @@ void test_match_filter() {
 			debug("\tcosts[%d]=%d\r\n", i, costs_1[i]);
 		}
 
+#ifdef UNITTEST_ASSERTION
+		if (n != 4 || costs_1[0] != 5 || costs_1[1] != 2 || costs_1[2] != 2 || costs_1[3] != 500)
+			return 0;
+#else
 		assert(n == 4);
 		assert(costs_1[0] == 5);
 		assert(costs_1[1] == 2);
 		assert(costs_1[2] == 2);
 		assert(costs_1[3] == 500);
+#endif
 	}
-
+	return 1;
 }
 
 // from "optuna_2.2l_2_T4_T0_multiline4_cffi_test_office_v1\29bdc258"
@@ -314,7 +324,7 @@ void test_tracking_1() {
 	assert(_track_obj.trackers[2].missed == 0); // Bug. Expect 0 but 1
 }
 
-void test_tracking_2() {
+int test_tracking_2() {
 
 	extern object_tracking_t _track_obj;
 
@@ -328,7 +338,12 @@ void test_tracking_2() {
 	};
 	// should add two new objects
 	object_tracking(dets_0, idxs_0, 1, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 1)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 1);
+#endif
 
 	debug("Step 1\r\n");
 	uint16_t idxs_1[] = { 0 };
@@ -336,7 +351,12 @@ void test_tracking_2() {
 		{ 10.0f, 10.0f, 20.0f, 20.0f}, // match with id 0
 	};
 	object_tracking(dets_1, idxs_1, 1, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 1)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 1);
+#endif
 
 	debug("Step 1\r\n");
 	uint16_t idxs_2[] = { 0 };
@@ -344,13 +364,20 @@ void test_tracking_2() {
 		{ 20.0f, 20.0f, 30.0f, 30.0f}, // match with id 0
 	};
 	object_tracking(dets_2, idxs_2, 1, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 1)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 1);
+#endif
 
 	debug("Printing last position: \r\n");
 	print_last_pos((object_tracking_t*)&_track_obj);
+
+	return 1;
 }
 
-void test_tracking_clearing() {
+int test_tracking_clearing() {
 
 	extern object_tracking_t _track_obj;
 
@@ -366,11 +393,21 @@ void test_tracking_clearing() {
 	};
 	// should add three new objects
 	object_tracking(dets_0, idxs_0, 3, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 3)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 3);
+#endif
 
 	// clear all objects - we should have 0 objects in memory
 	object_tracking_clear(&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 0)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 0);
+#endif
 
 	debug("Step 1\r\n");
 	uint16_t idxs_1[] = { 0, 1 };
@@ -380,13 +417,28 @@ void test_tracking_clearing() {
 
 	}; 
 	object_tracking(dets_1, idxs_1, 2, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 2)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 2);
+#endif
 	object_tracking(dets_1, idxs_1, 2, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 2)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 2);
+#endif
 
 	// clear all objects - we should have 0 objects in memory
 	object_tracking_clear(&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 0)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 0);
+#endif
 
 	debug("Step 3\r\n");
 	uint16_t idxs_2[] = { 0 };
@@ -394,20 +446,40 @@ void test_tracking_clearing() {
 		{ 20.0f, 20.0f, 30.0f, 30.0f}, // match with id 0
 	};
 	object_tracking(dets_2, idxs_2, 1, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 1)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 1);
+#endif
 
 	// clear all objects - we should have 0 objects in memory
 	object_tracking_clear(&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 0)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 0);
+#endif
 
 	debug("Step 4\r\n");
 	object_tracking(NULL, NULL, 0, (object_tracking_t*)&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 0)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 0);
+#endif
 
 	// clear all objects - we should have 0 objects in memory
 	object_tracking_clear(&_track_obj);
+#ifdef UNITTEST_ASSERTION
+	if (tracker_num_active(&_track_obj) != 0)
+		return 0;
+#else
 	assert(tracker_num_active(&_track_obj) == 0);
-
+#endif
+	return 1;
 }
 
 void print_last_pos(object_tracking_t* track_obj) {
@@ -425,7 +497,7 @@ void print_last_pos(object_tracking_t* track_obj) {
 	}
 }
 
-void bboxcorner2centroid_unittest() {
+int bboxcorner2centroid_unittest() {
 	vec2f c_det;
 	BoxCornerEncodingFloat bboxes[1];
 	BoxCornerEncodingFloat* bbox = &bboxes[0];
@@ -434,8 +506,14 @@ void bboxcorner2centroid_unittest() {
 	bbox->ymax = 0.4f;
 	bbox->ymin = 0.0f;
 	bboxcorner2centroid(bbox, &c_det);
+#ifdef UNITTEST_ASSERTION
+	if (c_det.x != 0.3f || c_det.y != 0.2f)
+		return 0;
+#else
 	assert(c_det.x == 0.3f);
 	assert(c_det.y == 0.2f);
+#endif
 	debug("Passed bboxcorner2centroid_unittest\r\n");
+	return 1;
 }
 

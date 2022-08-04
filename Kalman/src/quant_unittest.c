@@ -6,8 +6,6 @@
 #include "quant_utils.h"
 #include "quant_unittest.h"
 
-void dequantize_class_unittest();
-
 // testdata from tflite model:
 
 // scale=0.00390625 and zero_point=-128
@@ -43,15 +41,21 @@ const int8_t quant_class_raw_array[QUANT_CLASS_TEST_N] = { 19, -19,  88, -88,  8
 float quant_class_test_array[QUANT_CLASS_TEST_N];
 const float quant_class_ref_array[QUANT_CLASS_TEST_N] = { 0.57421875f, 0.42578125f, 0.84375f   , 0.15625f   , 0.84375f   , 0.15625f   , 0.84375f   , 0.15625f   , 0.640625f  , 0.359375f };
 
-void dequantize_class_unittest()
+int dequantize_class_unittest()
 {
     dequantize_to_float(
         (const int8_t*)quant_class_raw_array, 
         (float*)quant_class_test_array, QUANT_CLASS_TEST_N, TEST_CLASS_QUANT_SCALE, TEST_CLASS_QUANT_OFFSET);
 
     for (int i = 0; i < QUANT_CLASS_TEST_N; i++)
-	    assert(appx_equal(quant_class_ref_array[i], quant_class_test_array[i]));
+#ifdef UNITTEST_ASSERTION
+        if (!appx_equal(quant_class_ref_array[i], quant_class_test_array[i]))
+            return 0;
+#else
+        assert(appx_equal(quant_class_ref_array[i], quant_class_test_array[i]));
+#endif
     debug("class unittest passed\r\n");
+    return 1;
 }
 
 #define N_SAMPLES                   10
@@ -75,11 +79,17 @@ const float expected_output_array[N_KEPT * ROW_LENGTH] = { 2.29041762f,  -6.7567
          3.89370996f,  -7.9019408f ,  -2.4049385f , -10.07783754f };
 uint16_t kept_indicies[N_KEPT] = { 0, 5, 9, 8, 1, 4, 6, 2 };
 
-void dequantize_by_index_unittest()
+int dequantize_by_index_unittest()
 {
     dequantize_to_float_by_index(dequantize_input_array, output_array, kept_indicies, N_KEPT, ROW_LENGTH, SCALE, ZERO_POINT);
 
     for (int i = 0; i < N_KEPT * ROW_LENGTH; i++)
+#ifdef UNITTEST_ASSERTION
+        if (!appx_equal(output_array[i], expected_output_array[i]))
+            return 0;
+#else
         assert(appx_equal(output_array[i], expected_output_array[i]));
+#endif
     debug("index unittest passed\r\n");
+    return 1;
 }

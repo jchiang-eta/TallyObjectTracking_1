@@ -145,4 +145,36 @@ namespace Kalman_UnitTest
 			Assert::AreEqual(nms_unittest(), 1);
 		}
 	};
+	TEST_CLASS(Quant_Unittest)
+	{
+	public:
+		TEST_METHOD(Test_dequantize_class)
+		{
+			Assert::AreEqual(dequantize_class_unittest(), 1);
+		}
+		TEST_METHOD(Test_dequantize_by_index)
+		{
+			Assert::AreEqual(dequantize_by_index_unittest(), 1);
+		}
+	};
+	TEST_CLASS(Tracking_Unittest)
+	{
+	public:
+		TEST_METHOD(Test_match_filter)
+		{
+			Assert::AreEqual(test_match_filter(), 1);
+		}
+		TEST_METHOD(Test_bboxcorner2centroid)
+		{
+			Assert::AreEqual(bboxcorner2centroid_unittest(), 1);
+		}
+		TEST_METHOD(Test_tracking_2)
+		{
+			Assert::AreEqual(test_tracking_2(), 1);
+		}
+		TEST_METHOD(Test_tracking_clearing)
+		{
+			Assert::AreEqual(test_tracking_clearing(), 1);
+		}
+	};
 }
