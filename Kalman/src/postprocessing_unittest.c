@@ -96,7 +96,7 @@ void init_boxes() {
 
 extern uint16_t kept_indicies_tmp[MAX_INDICIES];
 
-void filtering_unittest()
+int filtering_unittest()
 {
 
 	debug("\tFiltering unittest\r\n");
@@ -106,13 +106,22 @@ void filtering_unittest()
 	int n_kept_tmp = FilterByScoreSingleClassExclBG_Float(test_scores, N_TEST_BOXES, TEST_SCORE_THRESHOLD, kept_indicies_tmp, MAX_INDICIES);
 
 	//// check if numer of boxes is correct
+#ifdef UNITTEST_ASSERTION
+	if (n_kept_tmp != N_TEST_OVER_THRESHOLD)
+		return 0;
+	for (int i = 0, idx = 0; i < N_TEST_OVER_THRESHOLD; i++, idx += N_TEST_BOXES / N_TEST_OVER_THRESHOLD)
+		if (kept_indicies_tmp[i] != idx)
+			return 0;
+#else
 	assert(n_kept_tmp == N_TEST_OVER_THRESHOLD);
 	//// check if each box is ok
 	for (int i = 0, idx = 0; i < N_TEST_OVER_THRESHOLD; i++, idx += N_TEST_BOXES / N_TEST_OVER_THRESHOLD)
-		assert(kept_indicies_tmp[i] != idx);
+		assert(kept_indicies_tmp[i] == idx);
+#endif
+	return 1;
 }
 
-void filtering_unittest_1()
+int filtering_unittest_1()
 {
 
 	debug("\tFiltering unittest 1\r\n");
@@ -122,7 +131,12 @@ void filtering_unittest_1()
 	init_boxes();
 	const float weights_vect[2] = { 0.8f, 0.8f };
 	int count_float = FilterWeighedSumMulticlass_Float(test_scores, N_TEST_BOXES, TEST_SCORE_THRESHOLD, weights_vect, kept_indicies_tmp, MAX_INDICIES, 2);
+#ifdef UNITTEST_ASSERTION
+	if (count_float != 10)
+		return 0;
+#else
 	assert(count_float == 10);
+#endif
 
 	// test FilterOneClassByScoreMulticlass_Byte
 	debug("FilterOneClassByScoreMulticlass_Byte test\r\n");
@@ -134,7 +148,13 @@ void filtering_unittest_1()
 	int16_t keep_indicies[N_TEST_BOXES];
 
 	int16_t count_byte = FilterOneClassByScoreMulticlass_Byte(scores_byte, N_TEST_BOXES, threshold, keep_indicies, N_TEST_BOXES, 2, 1);
+#ifdef UNITTEST_ASSERTION
+	if (count_byte != 24)
+		return 0;
+#else
 	assert(count_byte == 24);
+#endif
+	return 1;
 }
 
 BoxCornerEncodingFloat nms_bboxes[10];
@@ -181,19 +201,30 @@ void nms_init() {
 	b->ymax = 0.15f;
 }
 
-void nms_unittest(){
+int nms_unittest(){
 	uint16_t nms_kept_n;
 	uint16_t nms_kept_indicies[6];
 	nms_init();
 	nms_kept_n = hard_nms_single_class(nms_bboxes, scores, kept_indices, 6, nms_kept_indicies, 0.01f, 0, &_hard_nms);
 	uint16_t expected[4] = { 0, 5, 1, 2 };
 
+#ifdef UNITTEST_ASSERTION
+	if (nms_kept_n != 4)
+		return 0;
+#else
 	assert(nms_kept_n == 4);
+#endif
 
 	for (int i = 0; i < nms_kept_n; i++) {
+#ifdef UNITTEST_ASSERTION
+		if (nms_kept_indicies[i] != expected[i])
+			return 0;
+#else
 		assert(nms_kept_indicies[i] == expected[i]);
+#endif
 	}
 	debug("NMS passed\n");
+	return 1;
 }
 
 

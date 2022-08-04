@@ -36,7 +36,7 @@ static hungarian_t _hun = {
 	TEST_SIZE_COL
 };
 
-void hungarian_test_recth() {
+int hungarian_test_recth() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -60,15 +60,26 @@ void hungarian_test_recth() {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 3)
+		return 0;
+	if (matchings[0].x != 0 || matchings[0].y != 3 || costs[0] != 3)
+		return 0;
+	if (matchings[1].x != 1 || matchings[1].y != 2 || costs[1] != 4)
+		return 0;
+	if (matchings[2].x != 2 || matchings[2].y != 1 || costs[2] != 2)
+		return 0;
+#else
 	assert(matches == 3);
 
 	assert(matchings[0].x == 0 && matchings[0].y == 3 && costs[0] == 3);
 	assert(matchings[1].x == 1 && matchings[1].y == 2 && costs[1] == 4);
 	assert(matchings[2].x == 2 && matchings[2].y == 1 && costs[2] == 2);
-
+#endif
+	return 1;
 }
 
-void hungarian_test_rectv() {
+int hungarian_test_rectv() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -93,16 +104,26 @@ void hungarian_test_rectv() {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 3)
+		return 0;
+	if (matchings[0].x != 1 || matchings[0].y != 2 || costs[0] != 4)
+		return 0;
+	if (matchings[1].x != 2 || matchings[1].y != 0 || costs[1] != 2)
+		return 0;
+	if (matchings[2].x != 3 || matchings[2].y != 1 || costs[2] != 5)
+		return 0;
+#else
 	assert(matches == 3);
 
 	assert(matchings[0].x == 1 && matchings[0].y == 2 && costs[0] == 4);
 	assert(matchings[1].x == 2 && matchings[1].y == 0 && costs[1] == 2);
 	assert(matchings[2].x == 3 && matchings[2].y == 1 && costs[2] == 5);
-
-
+#endif
+	return 1;
 }
 
-void hungarian_test_square() {
+int hungarian_test_square() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -125,16 +146,29 @@ void hungarian_test_square() {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 4)
+		return 0;
+	if (matchings[0].x != 0 || matchings[0].y != 0 || costs[0] != 4)
+		return 0;
+	if (matchings[1].x != 1 || matchings[1].y != 1 || costs[1] != 3)
+		return 0;
+	if (matchings[2].x != 2 || matchings[2].y != 3 || costs[2] != 5)
+		return 0;
+	if (matchings[3].x != 3 || matchings[3].y != 2 || costs[3] != 7)
+		return 0;
+#else
 	assert(matches == 4);
 
 	assert(matchings[0].x == 0 && matchings[0].y == 0 && costs[0] == 4);
 	assert(matchings[1].x == 1 && matchings[1].y == 1 && costs[1] == 3);
 	assert(matchings[2].x == 2 && matchings[2].y == 3 && costs[2] == 5);
 	assert(matchings[3].x == 3 && matchings[3].y == 2 && costs[3] == 7);
-
+#endif
+	return 1;
 }
 
-void hungarian_test_zeros_filled_row() {
+int hungarian_test_zeros_filled_row() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -151,18 +185,30 @@ void hungarian_test_zeros_filled_row() {
 	int matches = hungarian(cost_mat, n_rows, n_cols, matchings, costs, &_hun);
 
 	// if get stuck in infinite loop, matches will be 255
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+#else
 	assert(matches == 1);
+#endif
 
 	for (int i = 0; i < matches; i++) {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+	if (matchings[0].x != 0 || !(0 <= matchings[0].y < 6) || costs[0] != 0)
+		return 0;
+#else
 	assert(matches == 1);
 	assert(matchings[0].x == 0 && (0 <= matchings[0].y < 6) && costs[0] == 0);
-
+#endif
+	return 1;
 }
 
-void hungarian_test_zeros_filled_col() {
+int hungarian_test_zeros_filled_col() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -179,18 +225,30 @@ void hungarian_test_zeros_filled_col() {
 	int matches = hungarian(cost_mat, n_rows, n_cols, matchings, costs, &_hun);
 
 	// if get stuck in infinite loop, matches will be 255
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+#else
 	assert(matches == 1);
+#endif
 
 	for (int i = 0; i < matches; i++) {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+	if (!(0 <= matchings[0].x < 6) || matchings[0].y != 0 || costs[0] != 0)
+		return 0;
+#else
 	assert(matches == 1);
 	assert((0 <= matchings[0].x < 6) && matchings[0].y == 0 && costs[0] == 0);
-
+#endif
+	return 1;
 }
 
-void hungarian_test_infinite_loop() {
+int hungarian_test_infinite_loop() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -207,18 +265,30 @@ void hungarian_test_infinite_loop() {
 	int matches = hungarian(cost_mat, n_rows, n_cols, matchings, costs, &_hun);
 	
 	// if get stuck in infinite loop, matches will be 255
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+#else
 	assert(matches == 1);
+#endif
 
 	for (int i = 0; i < matches; i++) {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 1)
+		return 0;
+	if (matchings[0].x != 0 || matchings[0].y != 0 || costs[0] != 0)
+		return 0;
+#else
 	assert(matches == 1);
 	assert(matchings[0].x == 0 && matchings[0].y == 0 && costs[0] == 0);
-
+#endif
+	return 1;
 }
 
-void hungarian_test_negative_cost() {
+int hungarian_test_negative_cost() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -242,6 +312,20 @@ void hungarian_test_negative_cost() {
 		debug("match %d: (%d, %d) => %d\r\n", i, matchings[i].x, matchings[i].y, costs[i]);
 	}
 
+#ifdef UNITTEST_ASSERTION
+	if (matches != 5)
+		return 0;
+	if (matchings[0].x != 0 || matchings[0].y != 3 || costs[0] != 1)
+		return 0;
+	if (matchings[1].x != 1 || matchings[1].y != 0 || costs[1] != -1)
+		return 0;
+	if (matchings[2].x != 2 || matchings[2].y != 1 || costs[2] != -1)
+		return 0;
+	if (matchings[3].x != 3 || matchings[3].y != 2 || costs[3] != 2)
+		return 0;
+	if (matchings[4].x != 4 || matchings[4].y != 4 || costs[4] != -1)
+		return 0;
+#else
 	assert(matches == 5);
 
 	assert(matchings[0].x == 0 && matchings[0].y == 3 && costs[0] == 1);
@@ -249,7 +333,8 @@ void hungarian_test_negative_cost() {
 	assert(matchings[2].x == 2 && matchings[2].y == 1 && costs[2] == -1);
 	assert(matchings[3].x == 3 && matchings[3].y == 2 && costs[3] == 2);
 	assert(matchings[4].x == 4 && matchings[4].y == 4 && costs[4] == -1);
-
+#endif
+	return 1;
 }
 
 /*!

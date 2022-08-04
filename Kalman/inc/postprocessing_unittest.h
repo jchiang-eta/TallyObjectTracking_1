@@ -5,8 +5,9 @@
 void postprocessing_unittest();
 
 // partial tests
-void filtering_unittest();
-void nms_unittest();
+int filtering_unittest();
+int filtering_unittest_1();
+int nms_unittest();
 void postproc_pipeline_unittest();
 
 

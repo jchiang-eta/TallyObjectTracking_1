@@ -2,7 +2,7 @@
 #define _COUNTING_H
 
 #include <stdint.h>
-#include <vec_types.h>
+#include "vec_types.h"
 
 #define CNT_MAX_SEGMENTS 8
 

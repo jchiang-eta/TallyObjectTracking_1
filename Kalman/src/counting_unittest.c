@@ -48,7 +48,7 @@ static int display_counting_line(counting_t* cnt, int W, int H) {
 	return sum;
 }
 
-static void cnt_2pt_line_unittest() {
+int cnt_2pt_line_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -60,13 +60,19 @@ static void cnt_2pt_line_unittest() {
 	for (int i = 0; i < cnt.N; i++)
 		debug("[%d] a: %f, b: %f\n", i, cnt.a[i], cnt.b[i]);
 
+#ifdef UNITTEST_ASSERTION
+	if (cnt_npts_is_secondary(30.0f, 48.0f, &cnt) != 1 || cnt_npts_is_secondary(60.0f, 38.0f, &cnt) != 0)
+		return 0;
+#else
 	assert(cnt_npts_is_secondary(30.0f, 48.0f, &cnt) == 1);
 	assert(cnt_npts_is_secondary(60.0f, 38.0f, &cnt) == 0);
+#endif
 
 	debug("PASSED\n");
+	return 1;
 }
 
-static void cnt_2pt_line_inverted_unittest() {
+int cnt_2pt_line_inverted_unittest() {
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
@@ -76,17 +82,25 @@ static void cnt_2pt_line_inverted_unittest() {
 
 	for (int i = 0; i < cnt.N; i++)
 		debug("[%d] a: %f, b: %f\n", i, cnt.a[i], cnt.b[i]);
-
+#ifdef UNITTEST_ASSERTION
+	if (!appx_equalf(-0.5f, cnt.a[0]) || !appx_equalf(96.0f, cnt.b[0]))
+		return 0;
+	
+	if (cnt_npts_is_secondary(-5.0f, 96.0f, &cnt) != 0 || cnt_npts_is_secondary(-5.0f, 105.0f, &cnt) != 1)
+		return 0;
+#else
 	assert(appx_equalf(-0.5f, cnt.a[0]));
 	assert(appx_equalf(96.0f, cnt.b[0]));
 
 	assert(cnt_npts_is_secondary(-5.0f, 96.0f, &cnt) == 0);
 	assert(cnt_npts_is_secondary(-5.0f, 105.0f, &cnt) == 1);
-
+#endif
 	debug("PASSED\n");
+
+	return 1;
 }
 
-static void cnt_5pt_line_unittest() {
+int cnt_5pt_line_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
@@ -97,100 +111,158 @@ static void cnt_5pt_line_unittest() {
 
 	for (int i = 0; i < cnt.N; i++)
 		debug("[%d] a: %f, b: %f\n", i, cnt.a[i], cnt.b[i]);
+#ifdef UNITTEST_ASSERTION
+	if (!appx_equalf(0.0f, cnt.a[1]) || !appx_equalf(57.6f, cnt.b[1]))
+		return 0;
 
+	if (cnt_npts_is_secondary(32.0f, 57.0f, &cnt) != 0 || cnt_npts_is_secondary(32.0f, 58.0f, &cnt) != 1)
+		return 0;
+#else
 	assert(appx_equalf(0.0f, cnt.a[1]));
 	assert(appx_equalf(57.6f, cnt.b[1]));
 
 	assert(cnt_npts_is_secondary(32.0f, 57.0f, &cnt) == 0);
 	assert(cnt_npts_is_secondary(32.0f, 58.0f, &cnt) == 1);
-
+#endif
 	debug("PASSED\n");
 
+	return 1;
 }
 
-static void cnt_5pt_circle_draw_unittest() {
+int cnt_5pt_circle_draw_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { 0.65f, 0.5f, 0.4f, 0.55f, 0.9f };
 	int res = cnt_npts_init(y, 5, 100, 50, 0.0f, 0.0f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	int sum = display_counting_line(&cnt, 100, 50);
 
+#ifdef UNITTEST_ASSERTION
+	if (sum >= (50 / 2 * 100 / 2 / 2))
+		return 0;
+#else
 	assert(sum < (50 / 2 * 100 / 2 / 2));
-
+#endif
 	debug("PASSED\n");
 
+	return 1;
 }
 
-static void cnt_6pt_concave_with_negative_unittest() {
+int cnt_6pt_concave_with_negative_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { 1.1f, 0.7f, 0.6f, 0.6f, 0.7f, 1.1f };
 	int res = cnt_npts_init(y, 6, 100, 50, 0.0f, 0.0f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	int sum = display_counting_line(&cnt, 100, 50);
 
+#ifdef UNITTEST_ASSERTION
+	if (cnt_npts_is_secondary(5.0f, 45.0f, &cnt) || !cnt_npts_is_secondary(15.0f, 45.0f, &cnt) || sum >= (50 / 2 * 100 / 2 / 2))
+		return 0;
+#else
 	assert(!cnt_npts_is_secondary(5.0f, 45.0f, &cnt));
 	assert(cnt_npts_is_secondary(15.0f, 45.0f, &cnt));
-	assert(sum < (50/2 * 100/2 / 2));
+	assert(sum < (50 / 2 * 100 / 2 / 2));
+#endif
 
 	debug("PASSED\n");
 
+	return 1;
 }
 
-static void cnt_2pt_line_unittest_with_negative() {
+int cnt_2pt_line_unittest_with_negative() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { -0.1f, 0.6f };
 	int res = cnt_npts_init(y, 2, 96, 96, 0.0f, 0.0f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	for (int i = 0; i < cnt.N; i++)
 		debug("[%d] a: %f, b: %f\n", i, cnt.a[i], cnt.b[i]);
 
+#ifdef UNITTEST_ASSERTION
+	if (cnt_npts_is_secondary(30.0f, 91.0f, &cnt) != 1 || cnt_npts_is_secondary(60.0f, 30.0f, &cnt) != 0 ||
+		cnt_npts_is_secondary(-10.0f, 30.0f, &cnt) != 1)
+		return 0;
+#else
 	assert(cnt_npts_is_secondary(30.0f, 91.0f, &cnt) == 1);
 	assert(cnt_npts_is_secondary(60.0f, 30.0f, &cnt) == 0);
 	assert(cnt_npts_is_secondary(-10.0f, 30.0f, &cnt) == 1);
+#endif
 
 	debug("PASSED\n");
+
+	return 1;
 }
 
-static void cnt_6pt_zigzag_outofrange_unittest() {
+int cnt_6pt_zigzag_outofrange_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { 0.2f, 0.5f, 0.3f, 0.8f, -0.3f, 1.2f };
 	int res = cnt_npts_init(y, 6, 100, 50, 0.0f, 0.0f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	int sum = display_counting_line(&cnt, 100, 50);
 
+#ifdef UNITTEST_ASSERTION
+	if (cnt_npts_is_secondary(5.0f, 13.74f, &cnt) || !cnt_npts_is_secondary(25.0f, 22.6f, &cnt) ||
+		!cnt_npts_is_secondary(-1.0f, 9.26f, &cnt) || cnt_npts_is_secondary(110.0f, 97.4f, &cnt))
+		return 0;
+#else
 	assert(!cnt_npts_is_secondary(5.0f, 13.74f, &cnt));
 	assert(cnt_npts_is_secondary(25.0f, 22.6f, &cnt));
 	assert(cnt_npts_is_secondary(-1.0f, 9.26f, &cnt));
 	assert(!cnt_npts_is_secondary(110.0f, 97.4f, &cnt));
+#endif
 
 	debug("PASSED\n");
 
+	return 1;
 }
 
-static void cnt_5pt_circle_draw_hist_unittest() {
+int cnt_5pt_circle_draw_hist_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { 1.0f, 0.5f, 0.4f, 0.5f, 1.0f };
 	int res = cnt_npts_init(y, 5, 100, 50, 0.15f, 0.0f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	int sum = display_counting_line(&cnt, 100, 50);
 
@@ -199,8 +271,13 @@ static void cnt_5pt_circle_draw_hist_unittest() {
 		vec2f e = { .x = 50.0f, .y = 40.0f }; // secondary
 		vec2ui8 out = { 0, 0 };
 		compute_count(&s, &e, &out, &cnt);
+#ifdef UNITTEST_ASSERTION
+		if (out.v[0] != 0 || out.v[1] != 1)
+			return 0;
+#else
 		assert(out.v[0] == 0);
 		assert(out.v[1] == 1);
+#endif
 	}
 
 	{
@@ -208,8 +285,13 @@ static void cnt_5pt_circle_draw_hist_unittest() {
 		vec2f e = { .x = 50.0f, .y = 22.0f }; // hysteresis
 		vec2ui8 out = { 0, 0 };
 		compute_count(&s, &e, &out, &cnt);
+#ifdef UNITTEST_ASSERTION
+		if (out.v[0] != 0 || out.v[1] != 0)
+			return 0;
+#else
 		assert(out.v[0] == 0);
 		assert(out.v[1] == 0);
+#endif
 	}
 
 	{
@@ -217,23 +299,34 @@ static void cnt_5pt_circle_draw_hist_unittest() {
 		vec2f e = { .x = 50.0f, .y = 40.0f }; // secondary
 		vec2ui8 out = { 0, 0 };
 		compute_count(&s, &e, &out, &cnt);
+#ifdef UNITTEST_ASSERTION
+		if (out.v[0] != 0 || out.v[1] != 0)
+			return 0;
+#else
 		assert(out.v[0] == 0);
 		assert(out.v[1] == 0);
+#endif
 	}
 
 	debug("PASSED\n");
 
+	return 1;
 }
 
 // test with small hysteresis and an offset
-static void cnt_6pt_hist_offset_unittest() {
+int cnt_6pt_hist_offset_unittest() {
 
 	debug("testing: %s\r\n", __FUNCTION__);
 
 	counting_t cnt;
 	float y[] = { 1.0f, 0.5f, 0.4f, 0.4f, 1.0f, 1.0f };
 	int res = cnt_npts_init(y, 6, 100, 50, 0.05f, -0.2f, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (res != 0)
+		return 0;
+#else
 	assert(res == 0);
+#endif
 
 	int sum = display_counting_line(&cnt, 100, 50);
 
@@ -241,11 +334,17 @@ static void cnt_6pt_hist_offset_unittest() {
 	vec2f e = { .x = 99.0f, .y = 35.0f }; // primary
 	vec2ui8 out = { 0, 0 };
 	compute_count(&s, &e, &out, &cnt);
+#ifdef UNITTEST_ASSERTION
+	if (out.v[0] != 1 || out.v[1] != 0)
+		return 0;
+#else
 	assert(out.v[0] == 1);
 	assert(out.v[1] == 0);
+#endif
 
 	debug("PASSED\n");
 
+	return 1;
 }
 
 void counting_unittest() {
